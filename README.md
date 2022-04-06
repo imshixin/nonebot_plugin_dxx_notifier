@@ -2,7 +2,7 @@
  * @Author: imsixn
  * @Date: 2022-03-25 09:57:20
  * @LastEditors: imsixn
- * @LastEditTime: 2022-04-06 15:00:46
+ * @LastEditTime: 2022-04-06 15:06:41
  * @Description: file content
 -->
 
@@ -26,6 +26,8 @@ _✨ NoneBot 大学习提醒插件 ✨_
 </p>
 
 ## 使用方式
+
+待添加
 
 
 > 后面再写，先放着

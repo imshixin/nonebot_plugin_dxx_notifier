@@ -12,4 +12,18 @@ services:
       - ENVIRONMENT=prod # 配置 nonebot 运行环境，此项会被 .env 文件覆盖
       - APP_MODULE=bot:app # 配置 asgi 入口
       - MAX_WORKERS=1 # 如果你有多个QQ，且存在 self_id 指定，多个 worker 会导致无法找到其他 websocket 连接
-    network_mode: bridge
+    networks:
+      - 'redis_net'
+    # links:
+    #   - redis
+  redis:
+    image: redis:7.0-rc3-alpine3.15
+    container_name: redis
+    ports:
+      - '6379:6379'
+    networks:
+      - 'redis_net'
+networks:
+  redis_net:
+    external:
+      name: app_net

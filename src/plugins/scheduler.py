@@ -2,7 +2,7 @@
 Author: imsixn
 Date: 2022-03-26 21:27:07
 LastEditors"imsixn
-LastEditTime"2022-04-05 22:23:36
+LastEditTime"2022-04-07 21:30:01
 Description: file content
 """
 
@@ -10,18 +10,21 @@ Description: file content
 import asyncio
 from nonebot.log import logger
 from lib2to3.pgen2 import driver
+from apscheduler.events import EVENT_JOB_ADDED,JobEvent
+from apscheduler.job import Job
 from apscheduler.executors.asyncio import AsyncIOExecutor
 from apscheduler.jobstores.redis import RedisJobStore
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from nonebot import get_driver, export
 
+driver = get_driver()
 # plugin_name='scheduler'
 jobstore = RedisJobStore(
-    db=1,
+    db=0,
     jobs_key="apscheduler.notifier.jobs",
     run_times_key="apscheduler.notifier.run_times",
-    host="localhost",
-    port=6379,
+    host=driver.config.redis_host,
+    port=driver.config.redis_port,
     password="",
 )
 executor = AsyncIOExecutor()
@@ -44,5 +47,9 @@ async def init_scheduler():
         scheduler.start()
         logger.opt(colors=True).success("<y>Scheduler</y> start success")
 
+def task_add(e :JobEvent):
+    logger.opt(colors=True).info(f"<y>Scheduler</y>:新任务已添加:id={e.job_id}")
 
-get_driver().on_startup(init_scheduler)
+scheduler.add_listener(task_add,mask=EVENT_JOB_ADDED)
+
+driver.on_startup(init_scheduler)

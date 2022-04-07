@@ -2,7 +2,7 @@
 name = "qq_notifier"
 version = "0.1.0"
 description = "qq_notifier"
-authors = []
+authors = ['Elaina imsixn@163.com']
 readme = "README.md"
 
 [tool.poetry.dependencies]

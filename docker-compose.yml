@@ -17,7 +17,7 @@ services:
     volumes:
       - '.env.prod:/app/.env.prod:ro'
       - '.env.dev:/app/.env.dev:ro'
-      - './member_list.json:/app/member_list.json:ro'
+      - './info/:/app/info/:rw'
     # links:
     #   - redis
   redis:

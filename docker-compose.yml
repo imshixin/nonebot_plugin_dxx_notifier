@@ -5,7 +5,7 @@ services:
     build: .
     container_name: nonebot
     ports:
-      - "8080:8080" # 映射端口到宿主机 宿主机端口:容器端口
+      - "8788:8788" # 映射端口到宿主机 宿主机端口:容器端口
     env_file:
       - ".env.prod" # fastapi 使用的环境变量文件
     environment:
@@ -14,6 +14,10 @@ services:
       - MAX_WORKERS=1 # 如果你有多个QQ，且存在 self_id 指定，多个 worker 会导致无法找到其他 websocket 连接
     networks:
       - 'redis_net'
+    volumes:
+      - '.env.prod:/app/.env.prod:ro'
+      - '.env.dev:/app/.env.dev:ro'
+      - './member_list.json:/app/member_list.json:ro'
     # links:
     #   - redis
   redis:

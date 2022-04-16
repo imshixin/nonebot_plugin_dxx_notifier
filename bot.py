@@ -34,12 +34,6 @@ driver.register_adapter(ONEBOT_V11Adapter)
 nonebot.load_builtin_plugins("echo")
 nonebot.load_from_toml("pyproject.toml")
 
-@driver.on_shutdown
-def on_shutdown():
-    nonebot.require('redis_db').redis.close()
-    nonebot.require("scheduler").scheduler.shutdown()
-    nonebot.logger.opt(colors=True).info("<y>Scheduler</y>:shutdown")
-    nonebot.logger.opt(colors=True).info("<y>Redis</y>: connection close")
 
 
 if __name__ == "__main__":

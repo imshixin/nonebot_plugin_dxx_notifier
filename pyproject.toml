@@ -17,7 +17,7 @@ plugins = ["nonebot_plugin_heisi", "nonebot_plugin_status"]#, "nonebot_plugin_ap
 plugin_dirs = ["src/plugins"]
 
 [tool.black]
-line-length=130
+line-length=140
 skip-string-normalization=true
 
 [build-system]

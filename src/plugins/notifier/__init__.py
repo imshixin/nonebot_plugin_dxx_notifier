@@ -2,7 +2,7 @@
 Author: imsixn
 Date: 2022-03-26 14:15:14
 LastEditors"imsixn
-LastEditTime"2022-04-16 14:36:11
+LastEditTime"2022-04-25 23:08:30
 Description: file content
 """
 from datetime import datetime
@@ -17,6 +17,7 @@ from . import const, tools, schedule
 from lib2to3.pgen2 import driver
 from nonebot import Bot, get_bot, get_driver, require, on_command, logger
 from nonebot.adapters.onebot.v11 import MessageSegment
+from nonebot.adapters.onebot.v11.exception import ActionFailed
 from nonebot.rule import to_me
 from nonebot.permission import SUPERUSER
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
@@ -116,12 +117,17 @@ async def send_study_priv(bot: Bot):
     except (ConnectionError, ReadTimeout) as e:
         await dxx_priv_notify.send("获取通知名单超时")
         return
+    errs=[]
     for m in notice_list:  # 逐个通知
-        await schedule.send_private_notice(
-            'personal check', plugin_config.dxx_notifier_group_id, m['user_id'], const.private_notice_message
-        )
+        try:
+            await schedule.send_private_notice(
+                'personal check', plugin_config.dxx_notifier_group_id, m['user_id'], const.private_notice_message
+            )
+        except ActionFailed as e:
+            errs.append(m)
     message = '\n'.join([f"{x['name'].rjust(5,chr(12288))} | {x['card_name'] or x['nickname']} | {x['user_id']}" for x in notice_list])
-    await dxx_priv_notify.send("通知发送成功，以下人员已发送通知：\n\n姓名 | 网名 | QQ号\n" + message)
+    message_err = '\n'.join([f"{x['name'].rjust(5,chr(12288))} | {x['card_name'] or x['nickname']} | {x['user_id']}" for x in errs])
+    await dxx_priv_notify.send("通知发送成功，以下人员已发送通知：\n\n姓名 | 网名 | QQ号\n" + message+f'\n\n 以下发送失败({len(errs)}):\n'+message_err)
 
 
 @dxx_group_notify.handle()
